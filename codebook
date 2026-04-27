@@ -1,0 +1,90 @@
+# Codebook: Variable Definitions and Coding Decisions
+
+## Corpus Variables
+
+| Variable | Description | Values |
+|---|---|---|
+| `lang` | L1 background | french, italian, portuguese, spanish |
+| `level` | CEFR proficiency level | A1, A2, B1, B2, C1 |
+| `level_num` | Numeric CEFR level | 1 (A1) through 5 (C1) |
+| `wc` | Word count | Alphabetic tokens only (punctuation excluded) |
+
+## Count Variables
+
+| Variable | Description |
+|---|---|
+| `raw_mv_into` | Verified instances of manner verb + *into* with spatial Ground |
+| `norm_mv_into` | Normalized frequency per 10,000 words |
+| `raw_mv_outof` | Verified instances of manner verb + *out of* with spatial Ground |
+| `norm_mv_outof` | Normalized frequency per 10,000 words |
+| `raw_mv_total` | raw_mv_into + raw_mv_outof |
+| `raw_pv` | Verified instances of *enter/exit* with spatial Ground noun |
+| `norm_pv` | Normalized frequency per 10,000 words |
+| `raw_pv_no_object` | Intransitive *enter/exit* tokens (no overt Ground noun; excluded) |
+
+## Motion Type Classification
+
+Manner verb lemmas are classified as:
+
+- **Self-motion**: the agent's own body crosses the boundary
+  - walk, run, jump, rush, sneak, crawl, climb, swim, fly, march, slide, slip,
+    stumble, tiptoe, dash, race, sprint, stroll, wander, skip, hop, limp, dive,
+    burst, crash (24 lemmas)
+- **Caused-motion**: the agent causes another entity to cross the boundary
+  - throw, kick, push, pull, hit, toss, roll, drop, pour, drag, chase, bounce,
+    shoot (13 lemmas)
+
+## Ground Noun Classification
+
+Ground nouns are classified as:
+
+- **SPATIAL** (keep): genuine bounded spaces — enclosed buildings, vehicles,
+  natural spaces, containers, urban spaces, geographic territories, sports bounds
+- **BODY** (exclude): body-part nouns (stomach, chest, back, etc.)
+- **PERSON** (exclude): animate/person nouns (man, woman, player, etc.)
+- **ABSTRACT** (exclude): non-spatial concepts including idioms (play, tears, time, job, etc.)
+- **NO_OBJECT** (exclude — path verbs only): intransitive uses with no overt Ground
+  noun within the search window
+
+## Path Verb Scope
+
+Only `enter` and `exit` (and inflected forms) are included as boundary-crossing
+path verbs. The following were excluded with rationale:
+
+| Verb | Reason for exclusion |
+|---|---|
+| *leave* | Encodes source, not boundary crossing; extremely frequent in non-spatial uses |
+| *arrive* | Encodes endpoint/goal, not boundary crossing per se |
+| *depart* | Encodes source, not boundary crossing per se |
+| *go in/out* | Highly polysemous; predominantly non-spatial in this corpus |
+| *come in/out* | Highly polysemous; predominantly non-spatial in this corpus |
+
+## Intransitive enter/exit
+
+Tokens of *enter* and *exit* without a recoverable direct-object Ground noun
+within the 5-token look-ahead window are counted separately as
+`raw_pv_no_object` and excluded from all analyses. These accounted for 788
+tokens (75.0% of all *enter/exit* tokens) in the present corpus. This exclusion
+is conservative: many intransitive uses are genuine boundary-crossing events
+(e.g., *she entered and sat down*), but the Ground noun cannot be positively
+verified from the tagged text alone.
+
+## Manual Review Files
+
+`manual_review_mv_constructions.txt` and `manual_review_path_verbs.txt` document
+all noun-by-noun decisions made during the manual review step, including:
+- The decision (SPATIAL / ABSTRACT / BODY / PERSON / TYPO / EXCLUDE)
+- The context used to make the decision
+- Notes on ambiguous cases
+
+These files provide full transparency on the filtering procedure and allow
+independent replication of the Ground-noun classification decisions.
+
+## Misspelling Filter (exiting / exciting)
+
+Six tokens of the form `exiting_VBG` in the Spanish subcorpora were identified
+as misspellings of *exciting* rather than uses of the path verb *exit*. These
+were identified by context (e.g., *very exiting Hi!*, *job is exiting sometimes*,
+*exiting becose i like this page*) and excluded from all counts. This finding
+illustrates the importance of concordance review even for apparently
+straightforward POS-tagged searches.
